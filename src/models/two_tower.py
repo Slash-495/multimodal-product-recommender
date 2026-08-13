@@ -24,6 +24,19 @@ class TwoTowerModel(nn.Module):
             dropout=config['item_tower']['dropout']
         )
         
+    def encode_user(self, user_ids: torch.Tensor, user_features: torch.Tensor) -> torch.Tensor:
+        """Encode user IDs and statistical features into user embeddings."""
+        return self.user_tower(user_ids, user_features)
+
+    def encode_item(
+        self,
+        item_ids: torch.Tensor,
+        business_features: torch.Tensor,
+        category_features: torch.Tensor
+    ) -> torch.Tensor:
+        """Encode business IDs, business features, and category features into item embeddings."""
+        return self.item_tower(item_ids, business_features, category_features)
+
     def forward(self, batch: Dict[str, torch.Tensor]) -> Tuple[torch.Tensor, torch.Tensor]:
         # 从batch中提取特征
         user_ids = batch['user_features'][:, 0].long()  # 第一列是user_idx
@@ -34,7 +47,7 @@ class TwoTowerModel(nn.Module):
         category_features = batch['category_features']
         
         # 分别通过两个塔
-        user_embeddings = self.user_tower(user_ids, user_features)
-        item_embeddings = self.item_tower(business_ids, business_features, category_features)
+        user_embeddings = self.encode_user(user_ids, user_features)
+        item_embeddings = self.encode_item(business_ids, business_features, category_features)
         
         return user_embeddings, item_embeddings 
