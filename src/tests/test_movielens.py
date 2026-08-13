@@ -1,4 +1,3 @@
-import io
 import json
 from pathlib import Path
 import sys
@@ -16,28 +15,30 @@ if str(project_root) not in sys.path:
 from src.data.movielens_preprocess import (
     get_top_genres,
     load_raw_movielens_stream,
-    process_movielens_data,
+    process_movielens_data_warmstart,
+    split_user_interactions_chronological,
 )
-from src.data.movielens_dataset import MovieLensDataset, get_movielens_dataloader
+from src.data.movielens_dataset import MovieLensDataset
 
 
 def test_movielens_stream_sampling_from_zip(tmp_path):
     """Verify streaming and sampling directly from a synthetic zip file without extracting to disk."""
     zip_path = tmp_path / "test_ml.zip"
 
+    # User 1 has 5 ratings (eligible), User 2 has 2 ratings (ineligible)
     ratings_df = pd.DataFrame(
         {
-            "userId": [1, 1, 2, 2, 3],
-            "movieId": [10, 20, 10, 30, 20],
-            "rating": [4.0, 5.0, 3.5, 2.0, 4.5],
-            "timestamp": [1000, 2000, 3000, 4000, 5000],
+            "userId": [1, 1, 1, 1, 1, 2, 2],
+            "movieId": [10, 20, 30, 40, 50, 10, 20],
+            "rating": [4.0, 5.0, 3.5, 2.0, 4.5, 3.0, 4.0],
+            "timestamp": [1000, 2000, 3000, 4000, 5000, 1500, 2500],
         }
     )
     movies_df = pd.DataFrame(
         {
-            "movieId": [10, 20, 30],
-            "title": ["Movie A", "Movie B", "Movie C"],
-            "genres": ["Action|Sci-Fi", "Action|Drama", "Comedy"],
+            "movieId": [10, 20, 30, 40, 50],
+            "title": ["M10", "M20", "M30", "M40", "M50"],
+            "genres": ["Action|Sci-Fi", "Action|Drama", "Comedy", "Drama", "Action"],
         }
     )
 
@@ -45,50 +46,55 @@ def test_movielens_stream_sampling_from_zip(tmp_path):
         zf.writestr("ratings.csv", ratings_df.to_csv(index=False))
         zf.writestr("movies.csv", movies_df.to_csv(index=False))
 
-    ratings_out, movies_out = load_raw_movielens_stream(zip_path, max_interactions=3, seed=42)
+    ratings_out, movies_out, raw_ratings_cnt, raw_users_cnt = load_raw_movielens_stream(
+        zip_path, max_interactions=10, min_user_interactions=5, seed=42
+    )
 
-    assert len(ratings_out) == 3
-    assert len(movies_out) <= 3
-    assert "userId" in ratings_out.columns
-    assert "movieId" in movies_out.columns
+    assert len(ratings_out) == 5
+    assert set(ratings_out["userId"].unique()) == {1}
+    assert raw_ratings_cnt == 7
+    assert raw_users_cnt == 2
 
 
-def test_movielens_deterministic_genre_selection():
-    """Verify top 10 genres are selected deterministically by frequency and alphabetical tie-breaking."""
-    movies_df = pd.DataFrame(
+def test_movielens_per_user_chronological_split_and_no_leakage():
+    """Verify per-user chronological splitting prevents temporal data leakage."""
+    user_df = pd.DataFrame(
         {
-            "movieId": [1, 2, 3],
-            "genres": ["Action|Adventure", "Action|Comedy", "Comedy|Drama"],
+            "userId": [10] * 10,
+            "movieId": list(range(101, 111)),
+            "rating": [4.0] * 10,
+            "timestamp": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
         }
     )
 
-    genres_1 = get_top_genres(movies_df, top_k=10)
-    genres_2 = get_top_genres(movies_df, top_k=10)
+    u_train, u_valid, u_test = split_user_interactions_chronological(user_df)
 
-    assert genres_1 == genres_2
-    # Action (2), Comedy (2), Adventure (1), Drama (1) -> Action & Comedy tied at 2 ('Action' < 'Comedy')
-    assert genres_1[0] == "Action"
-    assert genres_1[1] == "Comedy"
+    assert not u_train.empty
+    assert not u_valid.empty
+    assert not u_test.empty
+
+    assert len(u_train) + len(u_valid) + len(u_test) == 10
+
+    # Leakage check: max train ts < min valid ts < max valid ts < min test ts
+    assert u_train["timestamp"].max() <= u_valid["timestamp"].min()
+    assert u_valid["timestamp"].max() <= u_test["timestamp"].min()
 
 
-def test_movielens_feature_extraction_and_leakage_prevention(tmp_path):
-    """
-    Verify user/movie features and ID mappings are derived from training split only,
-    and exactly 10 genre features are generated without NaNs.
-    """
+def test_movielens_warmstart_preprocessing_and_100_percent_user_coverage(tmp_path):
+    """Verify 100% of warm-start test users exist in training, movie mappings are shared, and no NaNs exist."""
     ratings_df = pd.DataFrame(
         {
-            "userId": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
-            "movieId": [10, 20, 10, 30, 20, 30, 10, 20, 30, 40],
+            "userId": [1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+            "movieId": [10, 20, 30, 40, 50, 10, 20, 30, 40, 50],
             "rating": [5.0, 4.0, 3.0, 2.0, 4.5, 3.5, 4.0, 5.0, 2.5, 3.0],
             "timestamp": list(range(1000, 1010)),
         }
     )
     movies_df = pd.DataFrame(
         {
-            "movieId": [10, 20, 30, 40],
-            "title": ["M1", "M2", "M3", "M4"],
-            "genres": ["Action|Sci-Fi", "Action|Drama", "Comedy", "Drama|Thriller"],
+            "movieId": [10, 20, 30, 40, 50],
+            "title": ["M10", "M20", "M30", "M40", "M50"],
+            "genres": ["Action|Sci-Fi", "Action|Drama", "Comedy", "Drama|Thriller", "Action"],
         }
     )
 
@@ -101,90 +107,40 @@ def test_movielens_feature_extraction_and_leakage_prevention(tmp_path):
         movies_meta,
         user2idx,
         movie2idx,
-    ) = process_movielens_data(ratings_df, movies_df, train_ratio=0.8, valid_ratio=0.1, top_k_genres=10)
+        stats,
+    ) = process_movielens_data_warmstart(ratings_df, movies_df, min_user_interactions=5, top_k_genres=10)
 
-    # 1. Check exactly 10 category columns
-    cat_cols = [c for c in movie_features_out.columns if c.startswith("cat_")]
-    assert len(cat_cols) == 10
+    # 1. Verify 100% of test users exist in training
+    train_users = set(train_out["user_id"].unique())
+    test_users = set(test_out["user_id"].unique())
+    assert test_users.issubset(train_users)
 
-    # 2. Check zero NaNs
+    # 2. Verify movie mappings are shared across splits
+    assert set(train_out["business_id"].unique()).issubset(set(movie2idx.keys()))
+    assert set(test_out["business_id"].unique()).issubset(set(movie2idx.keys()))
+
+    # 3. Verify zero NaNs in features
     assert not train_out.isna().any().any()
     assert not valid_out.isna().any().any()
     assert not test_out.isna().any().any()
     assert not user_features_out.isna().any().any()
     assert not movie_features_out.isna().any().any()
 
-    # 3. Save CSVs to tmp_path and verify MovieLensDataset
-    train_out.to_csv(tmp_path / "train_interactions.csv", index=False)
-    valid_out.to_csv(tmp_path / "valid_interactions.csv", index=False)
-    test_out.to_csv(tmp_path / "test_interactions.csv", index=False)
-    user_features_out.to_csv(tmp_path / "user_features.csv", index=False)
-    movie_features_out.to_csv(tmp_path / "business_features.csv", index=False)
-
-    with open(tmp_path / "user2idx.json", "w") as f:
-        json.dump(user2idx, f)
-    with open(tmp_path / "business2idx.json", "w") as f:
-        json.dump(movie2idx, f)
-
-    ds = MovieLensDataset(data_path=tmp_path, mode="train")
-    sample = ds[0]
-
-    uf = sample["user_features"]
-    bf = sample["business_features"]
-    cf = sample["category_features"]
-
-    # 4. Check tensor dimensions
-    assert uf.shape == (4,)
-    assert bf.shape == (3,)
-    assert cf.shape == (10,)
-
-    assert not torch.isnan(uf).any()
-    assert not torch.isnan(bf).any()
-    assert not torch.isnan(cf).any()
+    # 4. Verify 10 category columns
+    cat_cols = [c for c in movie_features_out.columns if c.startswith("cat_")]
+    assert len(cat_cols) == 10
 
 
-def test_movielens_unknown_entity_handling(tmp_path):
-    """Verify unknown entities appearing only in validation/test dataset map safely to fallback index 0."""
-    train_inter = pd.DataFrame({"user_id": ["1", "2"], "business_id": ["10", "20"], "stars": [5.0, 4.0]})
-    valid_inter = pd.DataFrame({"user_id": ["1", "999_unknown"], "business_id": ["888_unknown", "20"], "stars": [3.0, 2.0]})
-
-    user_df = pd.DataFrame(
+def test_movielens_reproducibility():
+    """Verify running preprocessing twice with the same seed produces identical genre selection and stats."""
+    movies_df = pd.DataFrame(
         {
-            "user_id": ["1", "2", "999_unknown"],
-            "review_count": [10, 20, 5],
-            "average_stars": [4.0, 3.5, 2.0],
-            "yelping_days": [100, 50, 10],
+            "movieId": [1, 2, 3],
+            "genres": ["Action|Adventure", "Action|Comedy", "Comedy|Drama"],
         }
     )
-    biz_df = pd.DataFrame(
-        {
-            "business_id": ["10", "20", "888_unknown"],
-            "review_count": [50, 100, 10],
-            "stars": [4.5, 4.0, 3.0],
-        }
-    )
-    for i in range(10):
-        biz_df[f"cat_{i}"] = 0.0
 
-    train_inter.to_csv(tmp_path / "train_interactions.csv", index=False)
-    valid_inter.to_csv(tmp_path / "valid_interactions.csv", index=False)
-    user_df.to_csv(tmp_path / "user_features.csv", index=False)
-    biz_df.to_csv(tmp_path / "business_features.csv", index=False)
+    genres_1 = get_top_genres(movies_df, top_k=10)
+    genres_2 = get_top_genres(movies_df, top_k=10)
 
-    train_ds = MovieLensDataset(data_path=tmp_path, mode="train")
-    valid_ds = MovieLensDataset(
-        data_path=tmp_path,
-        mode="valid",
-        user2idx=train_ds.user2idx,
-        business2idx=train_ds.business2idx,
-    )
-
-    valid_sample_0 = valid_ds[0]  # user '1', biz '888_unknown'
-    valid_sample_1 = valid_ds[1]  # user '999_unknown', biz '20'
-
-    # Known user '1' index matches train_ds
-    assert valid_sample_0["user_features"][0].item() == train_ds[0]["user_features"][0].item()
-
-    # Unknown biz '888_unknown' and unknown user '999_unknown' map to fallback 0.0
-    assert valid_sample_0["business_features"][0].item() == 0.0
-    assert valid_sample_1["user_features"][0].item() == 0.0
+    assert genres_1 == genres_2

@@ -1,0 +1,55 @@
+{
+  "experiment": "movielens_two_tower_baseline",
+  "checkpoints": [
+    {
+      "epoch": 1,
+      "train_loss": 5.505625,
+      "valid_loss": 5.478912,
+      "recall@10": 0.0115,
+      "recall@50": 0.0515,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0031,
+      "checkpoint_path": "checkpoints\\movielens\\baseline_two_tower_epoch_1.pt"
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.481991,
+      "valid_loss": 5.475843,
+      "recall@10": 0.0104,
+      "recall@50": 0.049,
+      "ndcg@10": 0.0046,
+      "mrr@10": 0.0029,
+      "checkpoint_path": "checkpoints\\movielens\\baseline_two_tower_epoch_2.pt"
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.456858,
+      "valid_loss": 5.481541,
+      "recall@10": 0.0087,
+      "recall@50": 0.0457,
+      "ndcg@10": 0.0039,
+      "mrr@10": 0.0024,
+      "checkpoint_path": "checkpoints\\movielens\\baseline_two_tower_epoch_3.pt"
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.42685,
+      "valid_loss": 5.494088,
+      "recall@10": 0.0075,
+      "recall@50": 0.0365,
+      "ndcg@10": 0.0033,
+      "mrr@10": 0.0021,
+      "checkpoint_path": "checkpoints\\movielens\\baseline_two_tower_epoch_4.pt"
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.394021,
+      "valid_loss": 5.503087,
+      "recall@10": 0.0064,
+      "recall@50": 0.0323,
+      "ndcg@10": 0.0029,
+      "mrr@10": 0.0019,
+      "checkpoint_path": "checkpoints\\movielens\\baseline_two_tower_epoch_5.pt"
+    }
+  ]
+}
