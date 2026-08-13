@@ -54,18 +54,38 @@ cd two-tower-rec
 pip install -r requirements.txt
 ```
 
-## Quick Start
+## Dataset Pipeline Setup
 
-### Data Preparation
-```bash
-python src/data/data_loader.py --data_dir data/raw --output_dir data/processed
+### 1. Download & Place Yelp Dataset
+Download the [Yelp Academic Dataset](https://www.kaggle.com/datasets/yelp-dataset/yelp-dataset) and place the JSON files under `data/raw/`:
+```text
+data/raw/
+├── yelp_academic_dataset_review.json
+├── yelp_academic_dataset_user.json
+└── yelp_academic_dataset_business.json
 ```
 
-### Training on Kaggle
-1. Upload the project to Kaggle.
-2. Open `notebooks/train_kaggle.ipynb`.
-3. Select GPU as the accelerator.
-4. Run the notebook cells to train the model.
+### 2. Preprocess Dataset
+Run deterministic feature extraction and split data into train, valid, and test interaction files:
+```bash
+python src/data/preprocess.py
+```
+
+### 3. Model Training Commands
+
+#### Small-Scale CPU Smoke Training (Laptop Mode):
+```bash
+python scripts/train.py --max-samples 5000 --epochs 2 --batch-size 128
+```
+
+#### Full Training (CPU / CUDA GPU):
+```bash
+# GPU training (auto-detects CUDA if available)
+python scripts/train.py --epochs 10 --batch-size 256 --device cuda
+
+# Force CPU training
+python scripts/train.py --epochs 5 --batch-size 128 --device cpu
+```
 
 ## Model Architecture Details
 
