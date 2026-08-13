@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
+import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -22,11 +23,13 @@ class MovieLensDataset(Dataset):
         mode: str = "train",
         user2idx: Optional[Dict[str, int]] = None,
         business2idx: Optional[Dict[str, int]] = None,
+        text_embeddings_map: Optional[Dict[str, np.ndarray]] = None,
     ):
         self.data_path = Path(data_path)
         self.mode = mode
         self.user2idx = user2idx
         self.business2idx = business2idx
+        self.text_embeddings_map = text_embeddings_map
 
         self.data = self._load_data()
         self._setup_id_mappings()
@@ -133,11 +136,23 @@ class MovieLensDataset(Dataset):
 
         category_features = torch.tensor(cat_vals, dtype=torch.float32)
 
-        return {
+        out_dict = {
             "user_features": user_features,
             "business_features": business_features,
             "category_features": category_features,
         }
+
+        if self.text_embeddings_map is not None:
+            bid = str(row["business_id"])
+            if bid in self.text_embeddings_map:
+                t_emb = self.text_embeddings_map[bid]
+            else:
+                # Fallback zero vector matching embedding dimension
+                sample_dim = len(next(iter(self.text_embeddings_map.values()))) if self.text_embeddings_map else 64
+                t_emb = np.zeros(sample_dim, dtype=np.float32)
+            out_dict["text_features"] = torch.tensor(t_emb, dtype=torch.float32)
+
+        return out_dict
 
 
 def get_movielens_dataloader(

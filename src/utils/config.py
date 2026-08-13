@@ -26,7 +26,11 @@ DEFAULT_CONFIG = {
         'item_tower': {
             'embedding_dim': 64,
             'hidden_dims': [256, 128],
-            'dropout': 0.1
+            'dropout': 0.1,
+            'use_text_features': False,
+            'text_embedding_dim': 64,
+            'tfidf_max_features': 5000,
+            'svd_components': 64
         }
     },
     'training': {
