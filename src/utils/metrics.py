@@ -114,3 +114,108 @@ def compute_mrr_at_k(
     rr = (hits / ranks.unsqueeze(0)).sum(dim=1)
     
     return rr.mean()
+
+
+# =====================================================================
+# Multi-Label Offline Evaluation Functions
+# =====================================================================
+
+def filter_seen_candidates(
+    retrieved_items: list,
+    retrieved_scores: list,
+    train_seen_set: set,
+    top_k: int
+) -> tuple:
+    """
+    Exclude items present in train_seen_set from retrieved recommendations, keeping top_k un-seen items.
+    
+    Args:
+        retrieved_items: Ordered list of retrieved item IDs
+        retrieved_scores: Ordered list of similarity scores
+        train_seen_set: Set of item IDs the user interacted with in training
+        top_k: Maximum number of un-seen items to return
+    
+    Returns:
+        Tuple of (filtered_items, filtered_scores)
+    """
+    filtered_items = []
+    filtered_scores = []
+
+    for item, score in zip(retrieved_items, retrieved_scores):
+        if item not in train_seen_set:
+            filtered_items.append(item)
+            filtered_scores.append(score)
+            if len(filtered_items) == top_k:
+                break
+
+    return filtered_items, filtered_scores
+
+
+def compute_user_recall_at_k(
+    recommended_items: list,
+    ground_truth_set: set,
+    k: int
+) -> float:
+    """
+    Compute Recall@K for a single user with multiple ground-truth test items.
+    
+    Recall@K = |Recommended@K ∩ GroundTruth| / |GroundTruth|
+    """
+    if not ground_truth_set:
+        return 0.0
+
+    recs_at_k = recommended_items[:k]
+    hits = sum(1 for item in recs_at_k if item in ground_truth_set)
+    return float(hits) / float(len(ground_truth_set))
+
+
+def compute_user_ndcg_at_k(
+    recommended_items: list,
+    ground_truth_set: set,
+    k: int
+) -> float:
+    """
+    Compute NDCG@K for a single user with multiple ground-truth test items.
+    
+    DCG@K = ∑_{i=1}^K I(r_i ∈ GroundTruth) / log2(i + 1)
+    IDCG@K = ∑_{i=1}^{min(|GroundTruth|, K)} 1 / log2(i + 1)
+    NDCG@K = DCG@K / IDCG@K
+    """
+    if not ground_truth_set:
+        return 0.0
+
+    recs_at_k = recommended_items[:k]
+    dcg = 0.0
+    for i, item in enumerate(recs_at_k):
+        if item in ground_truth_set:
+            dcg += 1.0 / np.log2(i + 2.0)
+
+    # Compute Ideal DCG (IDCG)
+    idcg_items = min(len(ground_truth_set), k)
+    idcg = sum(1.0 / np.log2(i + 2.0) for i in range(idcg_items))
+
+    if idcg == 0.0:
+        return 0.0
+
+    return float(dcg / idcg)
+
+
+def compute_user_mrr_at_k(
+    recommended_items: list,
+    ground_truth_set: set,
+    k: int
+) -> float:
+    """
+    Compute MRR@K for a single user with multiple ground-truth test items.
+    
+    MRR@K = 1 / (rank of first ground truth hit in top K), or 0.0 if no hit.
+    """
+    if not ground_truth_set:
+        return 0.0
+
+    recs_at_k = recommended_items[:k]
+    for i, item in enumerate(recs_at_k):
+        if item in ground_truth_set:
+            return 1.0 / float(i + 1)
+
+    return 0.0
