@@ -18,20 +18,24 @@ class TwoTowerTrainer(BaseTrainer):
         super().__init__(model, optimizer, device)
         self.criterion = InfoNCELoss(temperature)
         
+    def _move_batch_to_device(self, batch: dict) -> dict:
+        return {
+            k: v.to(self.device) if isinstance(v, torch.Tensor) else v
+            for k, v in batch.items()
+        }
+
     def train_epoch(self, train_loader: DataLoader) -> float:
         """Train one epoch"""
         self.model.train()
-        total_loss = 0
+        total_loss = 0.0
         
         with tqdm(train_loader, desc='Training') as pbar:
             for batch in pbar:
-                user_ids = batch['user_ids'].to(self.device)
-                item_ids = batch['item_ids'].to(self.device)
-                labels = batch['labels'].to(self.device)
+                batch = self._move_batch_to_device(batch)
                 
                 # Forward pass
-                user_embeddings, item_embeddings = self.model(user_ids, item_ids)
-                loss = self.criterion(user_embeddings, item_embeddings, labels)
+                user_embeddings, item_embeddings = self.model(batch)
+                loss = self.criterion(user_embeddings, item_embeddings)
                 
                 # Backward pass
                 self.optimizer.zero_grad()
@@ -46,30 +50,15 @@ class TwoTowerTrainer(BaseTrainer):
     def validate(self, valid_loader: DataLoader) -> float:
         """Validate the model"""
         self.model.eval()
-        total_metrics = {}
+        total_loss = 0.0
         
         with torch.no_grad():
             for batch in valid_loader:
-                user_ids = batch['user_ids'].to(self.device)
-                item_ids = batch['item_ids'].to(self.device)
-                labels = batch['labels'].to(self.device)
+                batch = self._move_batch_to_device(batch)
                 
                 # Forward pass
-                user_embeddings, item_embeddings = self.model(user_ids, item_ids)
-                
-                # Compute metrics
-                metrics = compute_metrics(
-                    user_embeddings,
-                    item_embeddings,
-                    labels
-                )
-                
-                # Accumulate metrics
-                for k, v in metrics.items():
-                    total_metrics[k] = total_metrics.get(k, 0) + v
-        
-        # Average metrics
-        for k in total_metrics:
-            total_metrics[k] /= len(valid_loader)
+                user_embeddings, item_embeddings = self.model(batch)
+                loss = self.criterion(user_embeddings, item_embeddings)
+                total_loss += loss.item()
             
-        return total_metrics 
+        return total_loss / len(valid_loader) 

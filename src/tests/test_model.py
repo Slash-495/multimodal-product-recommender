@@ -16,12 +16,12 @@ from src.utils.config import DEFAULT_CONFIG
 class TestTwoTowerModel:
     """Tests for the Two-Tower recommendation model."""
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture
     def model(self):
         """Create model instance for testing."""
         return TwoTowerModel(DEFAULT_CONFIG["model"])
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture
     def batch_inputs(self):
         """Create dummy batch matching the model's expected input schema."""
 

@@ -64,33 +64,24 @@ class YelpDataset(Dataset):
     def __getitem__(self, idx: int) -> Dict[str, torch.Tensor]:
         row = self.data.iloc[idx]
         
-        # Features
-        features = {
-            # 用户特征
+        return {
             'user_features': torch.tensor([
-                row['user_idx'],  # 用户ID编码
-                row['review_count_x'],  # 用户评论数
-                row['average_stars'],  # 用户平均评分
-                row['yelping_days']  # 用户注册天数
+                row['user_idx'],
+                row['review_count_x'],
+                row['average_stars'],
+                row['yelping_days']
             ], dtype=torch.float),
             
-            # 商家特征
             'business_features': torch.tensor([
-                row['business_idx'],  # 商家ID编码
-                row['review_count_y'],  # 商家评论数
-                row['stars_y']  # 商家平均评分
+                row['business_idx'],
+                row['review_count_y'],
+                row['stars_y']
             ], dtype=torch.float),
             
-            # 商家类别特征 (one-hot编码)
             'category_features': torch.tensor([
                 row[col] for col in row.index if col.startswith('cat_')
             ], dtype=torch.float)
         }
-        
-        # Label
-        label = torch.tensor(row['stars_x'], dtype=torch.float)
-        
-        return features, label
 
 def get_dataloader(
     data_path: str,
