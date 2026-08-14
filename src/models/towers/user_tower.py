@@ -15,10 +15,10 @@ class UserTower(nn.Module):
         super().__init__()
         self.user_embedding = nn.Embedding(num_users, embedding_dim)
         
-        # 用户统计特征的维度：review_count + average_stars + yelping_days = 3
+        # User statistical features dimension: review_count + average_stars + yelping_days = 3
         self.user_features_dim = 3
         
-        # 修改MLP的输入维度，加入统计特征
+        # MLP input dimension incorporating statistical features
         layers = []
         input_dim = embedding_dim + self.user_features_dim
         for hidden_dim in hidden_dims:

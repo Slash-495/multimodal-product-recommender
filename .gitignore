@@ -3,16 +3,23 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .idea/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.idea/
 .vscode/
 .env
 *.log
 # Local datasets
 data/
 
-# Local model checkpoints
+# Local model checkpoints and binary artifacts
 checkpoints/
 *.pt
 *.pth
+*.zip
+*.joblib
 
 # Generated Python/build artifacts
 *.egg-info/
