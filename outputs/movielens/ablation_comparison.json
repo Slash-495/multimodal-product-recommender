@@ -1,0 +1,287 @@
+{
+  "experiment": "retrieval_ablation_study",
+  "num_evaluated_users": 55404,
+  "num_candidate_movies": 20822,
+  "ablation_models": [
+    {
+      "id": "Model D",
+      "name": "Hard-Negative Two-Tower (No Text)",
+      "checkpoint": "checkpoints/movielens/hard_negative_no_text_epoch_1.pt",
+      "use_text_features": false,
+      "fusion_type": "concat",
+      "use_hard_negatives": true,
+      "recall@10": 0.011987,
+      "recall@50": 0.053355,
+      "ndcg@10": 0.005227,
+      "mrr@10": 0.003248,
+      "training_time_seconds": 2100.0,
+      "evaluation_time_seconds": 52.08,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.011987,
+          "abs_improvement": 0.000487,
+          "rel_improvement_pct": 4.23
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.053355,
+          "abs_improvement": 0.001855,
+          "rel_improvement_pct": 3.6
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.005227,
+          "abs_improvement": 0.000227,
+          "rel_improvement_pct": 4.54
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.003248,
+          "abs_improvement": 0.000148,
+          "rel_improvement_pct": 4.77
+        }
+      }
+    },
+    {
+      "id": "Model E",
+      "name": "Hard-Negative Content-Concat Two-Tower",
+      "checkpoint": "checkpoints/movielens/hard_negative_two_tower_epoch_1.pt",
+      "use_text_features": true,
+      "fusion_type": "concat",
+      "use_hard_negatives": true,
+      "recall@10": 0.0119,
+      "recall@50": 0.0533,
+      "ndcg@10": 0.0052,
+      "mrr@10": 0.0033,
+      "training_time_seconds": 2154.7,
+      "evaluation_time_seconds": 53.12,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.0119,
+          "abs_improvement": 0.0004,
+          "rel_improvement_pct": 3.48
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.0533,
+          "abs_improvement": 0.0018,
+          "rel_improvement_pct": 3.5
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.0052,
+          "abs_improvement": 0.0002,
+          "rel_improvement_pct": 4.0
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.0033,
+          "abs_improvement": 0.0002,
+          "rel_improvement_pct": 6.45
+        }
+      }
+    },
+    {
+      "id": "Model A",
+      "name": "Original Two-Tower Baseline",
+      "checkpoint": "checkpoints/movielens/baseline_two_tower_epoch_1.pt",
+      "use_text_features": false,
+      "fusion_type": "concat",
+      "use_hard_negatives": false,
+      "recall@10": 0.0115,
+      "recall@50": 0.0515,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0031,
+      "training_time_seconds": 1746.5,
+      "evaluation_time_seconds": 50.1,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.0115,
+          "abs_improvement": 0.0,
+          "rel_improvement_pct": 0.0
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.0515,
+          "abs_improvement": 0.0,
+          "rel_improvement_pct": 0.0
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.005,
+          "abs_improvement": 0.0,
+          "rel_improvement_pct": 0.0
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.0031,
+          "abs_improvement": 0.0,
+          "rel_improvement_pct": 0.0
+        }
+      }
+    },
+    {
+      "id": "Model B",
+      "name": "Content-Concat Two-Tower",
+      "checkpoint": "checkpoints/movielens/content_two_tower_epoch_1.pt",
+      "use_text_features": true,
+      "fusion_type": "concat",
+      "use_hard_negatives": false,
+      "recall@10": 0.011,
+      "recall@50": 0.0527,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0033,
+      "training_time_seconds": 1780.2,
+      "evaluation_time_seconds": 52.4,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.011,
+          "abs_improvement": -0.0005,
+          "rel_improvement_pct": -4.35
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.0527,
+          "abs_improvement": 0.0012,
+          "rel_improvement_pct": 2.33
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.005,
+          "abs_improvement": 0.0,
+          "rel_improvement_pct": 0.0
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.0033,
+          "abs_improvement": 0.0002,
+          "rel_improvement_pct": 6.45
+        }
+      }
+    },
+    {
+      "id": "Model F",
+      "name": "Hard-Negative Concat + Stage-2 Reranker",
+      "checkpoint": "checkpoints/movielens/stage2_reranker_epoch_1.pt",
+      "use_text_features": true,
+      "fusion_type": "concat",
+      "use_hard_negatives": true,
+      "recall@10": 0.010333,
+      "recall@50": 0.053252,
+      "ndcg@10": 0.00476,
+      "mrr@10": 0.003114,
+      "training_time_seconds": 2165.9,
+      "evaluation_time_seconds": 112.96,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.010333,
+          "abs_improvement": -0.001167,
+          "rel_improvement_pct": -10.15
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.053252,
+          "abs_improvement": 0.001752,
+          "rel_improvement_pct": 3.4
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.00476,
+          "abs_improvement": -0.00024,
+          "rel_improvement_pct": -4.8
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.003114,
+          "abs_improvement": 1.4e-05,
+          "rel_improvement_pct": 0.45
+        }
+      }
+    },
+    {
+      "id": "Model C",
+      "name": "Content-Gated Two-Tower",
+      "checkpoint": "checkpoints/movielens/gated_two_tower_epoch_1.pt",
+      "use_text_features": true,
+      "fusion_type": "gated",
+      "use_hard_negatives": false,
+      "recall@10": 0.01,
+      "recall@50": 0.0474,
+      "ndcg@10": 0.0045,
+      "mrr@10": 0.0029,
+      "training_time_seconds": 1820.0,
+      "evaluation_time_seconds": 54.2,
+      "improvements_vs_original_baseline": {
+        "recall@10": {
+          "baseline": 0.0115,
+          "model_value": 0.01,
+          "abs_improvement": -0.0015,
+          "rel_improvement_pct": -13.04
+        },
+        "recall@50": {
+          "baseline": 0.0515,
+          "model_value": 0.0474,
+          "abs_improvement": -0.0041,
+          "rel_improvement_pct": -7.96
+        },
+        "ndcg@10": {
+          "baseline": 0.005,
+          "model_value": 0.0045,
+          "abs_improvement": -0.0005,
+          "rel_improvement_pct": -10.0
+        },
+        "mrr@10": {
+          "baseline": 0.0031,
+          "model_value": 0.0029,
+          "abs_improvement": -0.0002,
+          "rel_improvement_pct": -6.45
+        }
+      }
+    }
+  ],
+  "model_ranking_by_recall_at_10": [
+    "Model D: Hard-Negative Two-Tower (No Text)",
+    "Model E: Hard-Negative Content-Concat Two-Tower",
+    "Model A: Original Two-Tower Baseline",
+    "Model B: Content-Concat Two-Tower",
+    "Model F: Hard-Negative Concat + Stage-2 Reranker",
+    "Model C: Content-Gated Two-Tower"
+  ],
+  "best_model": {
+    "id": "Model D",
+    "name": "Hard-Negative Two-Tower (No Text)",
+    "checkpoint": "checkpoints/movielens/hard_negative_no_text_epoch_1.pt",
+    "metrics": {
+      "recall@10": 0.011987,
+      "recall@50": 0.053355,
+      "ndcg@10": 0.005227,
+      "mrr@10": 0.003248
+    },
+    "is_best_by_recall10": true,
+    "is_best_by_recall50": true,
+    "is_best_by_ndcg10": true
+  },
+  "component_classifications": {
+    "hard_negative_mining": {
+      "classification": "beneficial",
+      "justification": "Hard-negative mining provided the single largest performance jump across all metrics: Recall@10 increased from 0.011500 to 0.011987 (+4.23% over Original Baseline) and Recall@50 increased from 0.051500 to 0.053355 (+3.60%)."
+    },
+    "text_content_features": {
+      "classification": "neutral",
+      "justification": "Title TF-IDF/SVD features improved Recall@50 (+2.33%) under in-batch training, but yielded nearly identical metrics under hard-negative mining (Recall@10 of 0.011987 without text vs 0.011900 with text). Text features do not harm candidate quality when concatenated, but ID embeddings + hard negatives carry almost all retrieval capacity on warm-start users."
+    },
+    "fusion_strategy_gating": {
+      "classification": "harmful",
+      "justification": "Learned gating mechanism underperformed simple feature concatenation across every single metric (Recall@10 dropped from 0.0110 to 0.0100, a -9.09% loss)."
+    },
+    "stage2_mlp_reranking": {
+      "classification": "harmful",
+      "justification": "Stage-2 MLP reranking distorted global embedding space geometry, dropping Recall@10 from 0.0119 to 0.0103 (-13.17%) and NDCG@10 from 0.0052 to 0.0048 (-8.46%)."
+    }
+  }
+}
