@@ -19,6 +19,7 @@ class TwoTowerModel(nn.Module):
         
         use_text_features = config['item_tower'].get('use_text_features', False)
         text_embedding_dim = config['item_tower'].get('text_embedding_dim', 64)
+        fusion_type = config['item_tower'].get('fusion_type', 'concat')
 
         self.item_tower = ItemTower(
             num_items=config['num_items'],
@@ -27,7 +28,12 @@ class TwoTowerModel(nn.Module):
             dropout=config['item_tower']['dropout'],
             use_text_features=use_text_features,
             text_embedding_dim=text_embedding_dim,
+            fusion_type=fusion_type,
         )
+        
+    def get_last_gate(self) -> torch.Tensor:
+        """Expose the last gate tensor computed by ItemTower."""
+        return self.item_tower.get_last_gate()
         
     def encode_user(self, user_ids: torch.Tensor, user_features: torch.Tensor) -> torch.Tensor:
         """Encode user IDs and statistical features into user embeddings."""

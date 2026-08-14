@@ -39,6 +39,7 @@ def parse_args():
     parser.add_argument("--text-embedding-dim", type=int, default=64, help="Dimension of SVD text embedding")
     parser.add_argument("--tfidf-max-features", type=int, default=5000, help="Max vocabulary features for TF-IDF vectorizer")
     parser.add_argument("--svd-components", type=int, default=64, help="Number of components for TruncatedSVD")
+    parser.add_argument("--fusion-type", type=str, default="concat", choices=["concat", "gated"], help="Text feature fusion type ('concat' or 'gated')")
     return parser.parse_args()
 
 
@@ -120,6 +121,7 @@ def main():
     if args.use_text_features:
         config["model"]["item_tower"]["use_text_features"] = True
         config["model"]["item_tower"]["text_embedding_dim"] = args.text_embedding_dim
+        config["model"]["item_tower"]["fusion_type"] = args.fusion_type
 
     device = torch.device(args.device)
     print(f"Using device: {device}")

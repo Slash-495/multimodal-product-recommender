@@ -30,7 +30,8 @@ DEFAULT_CONFIG = {
             'use_text_features': False,
             'text_embedding_dim': 64,
             'tfidf_max_features': 5000,
-            'svd_components': 64
+            'svd_components': 64,
+            'fusion_type': 'concat'
         }
     },
     'training': {

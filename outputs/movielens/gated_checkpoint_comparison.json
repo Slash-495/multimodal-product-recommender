@@ -1,0 +1,62 @@
+{
+  "experiment": "movielens_two_tower_gated_fusion",
+  "best_epoch": 1,
+  "gate_diagnostics": {
+    "mean_gate": 0.6179578900337219,
+    "std_gate": 0.24542236328125,
+    "min_gate": 1.5397060598256962e-29,
+    "max_gate": 1.0
+  },
+  "checkpoints": [
+    {
+      "epoch": 1,
+      "train_loss": 5.502745,
+      "valid_loss": 5.492998,
+      "recall@10": 0.01,
+      "recall@50": 0.0474,
+      "ndcg@10": 0.0045,
+      "mrr@10": 0.0029,
+      "checkpoint_path": "checkpoints\\movielens\\gated_two_tower_epoch_1.pt"
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.480499,
+      "valid_loss": 5.474973,
+      "recall@10": 0.0096,
+      "recall@50": 0.044,
+      "ndcg@10": 0.0042,
+      "mrr@10": 0.0027,
+      "checkpoint_path": "checkpoints\\movielens\\gated_two_tower_epoch_2.pt"
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.452229,
+      "valid_loss": 5.490733,
+      "recall@10": 0.007,
+      "recall@50": 0.0373,
+      "ndcg@10": 0.0032,
+      "mrr@10": 0.0021,
+      "checkpoint_path": "checkpoints\\movielens\\gated_two_tower_epoch_3.pt"
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.41542,
+      "valid_loss": 5.510383,
+      "recall@10": 0.0066,
+      "recall@50": 0.0343,
+      "ndcg@10": 0.0028,
+      "mrr@10": 0.0018,
+      "checkpoint_path": "checkpoints\\movielens\\gated_two_tower_epoch_4.pt"
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.370336,
+      "valid_loss": 5.528014,
+      "recall@10": 0.0058,
+      "recall@50": 0.0311,
+      "ndcg@10": 0.0025,
+      "mrr@10": 0.0015,
+      "checkpoint_path": "checkpoints\\movielens\\gated_two_tower_epoch_5.pt"
+    }
+  ]
+}
