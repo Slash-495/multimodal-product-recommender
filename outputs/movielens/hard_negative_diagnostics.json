@@ -1,0 +1,11 @@
+{
+  "experiment": "hard_negative_diagnostics",
+  "checkpoint": "checkpoints\\movielens\\hard_negative_two_tower_epoch_1.pt",
+  "diagnostics": {
+    "avg_positive_similarity": 0.159826,
+    "avg_random_negative_similarity": 0.101644,
+    "avg_hard_negative_similarity": 0.197909,
+    "avg_hardest_negative_similarity": 0.198536,
+    "positive_vs_hard_margin": -0.038084
+  }
+}

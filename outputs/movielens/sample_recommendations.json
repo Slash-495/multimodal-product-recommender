@@ -1,0 +1,392 @@
+[
+  {
+    "userId": "10",
+    "recommended_movie_ids": [
+      "318",
+      "260",
+      "2959",
+      "527",
+      "296",
+      "5952",
+      "7153",
+      "4993",
+      "858",
+      "79132"
+    ],
+    "recommended_titles": [
+      "Shawshank Redemption, The (1994)",
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Fight Club (1999)",
+      "Schindler's List (1993)",
+      "Pulp Fiction (1994)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Lord of the Rings: The Return of the King, The (2003)",
+      "Lord of the Rings: The Fellowship of the Ring, The (2001)",
+      "Godfather, The (1972)",
+      "Inception (2010)"
+    ],
+    "similarity_scores": [
+      0.1787,
+      0.1756,
+      0.175,
+      0.1749,
+      0.1745,
+      0.1745,
+      0.1742,
+      0.1738,
+      0.1736,
+      0.1733
+    ]
+  },
+  {
+    "userId": "100007",
+    "recommended_movie_ids": [
+      "270",
+      "1004",
+      "1858",
+      "122890",
+      "550",
+      "358",
+      "1733",
+      "151739",
+      "2262",
+      "3811"
+    ],
+    "recommended_titles": [
+      "Love Affair (1994)",
+      "Glimmer Man, The (1996)",
+      "Mr. Nice Guy (Yat goh ho yan) (1997)",
+      "Warcraft (2016)",
+      "Threesome (1994)",
+      "Higher Learning (1995)",
+      "Afterglow (1997)",
+      "Dirty Grandpa (2016)",
+      "About Last Night... (1986)",
+      "Breaker Morant (1980)"
+    ],
+    "similarity_scores": [
+      0.2054,
+      0.1844,
+      0.1823,
+      0.1802,
+      0.1795,
+      0.1749,
+      0.1741,
+      0.1735,
+      0.1733,
+      0.1729
+    ]
+  },
+  {
+    "userId": "100013",
+    "recommended_movie_ids": [
+      "318",
+      "527",
+      "2959",
+      "296",
+      "79132",
+      "260",
+      "7153",
+      "5952",
+      "858",
+      "4993"
+    ],
+    "recommended_titles": [
+      "Shawshank Redemption, The (1994)",
+      "Schindler's List (1993)",
+      "Fight Club (1999)",
+      "Pulp Fiction (1994)",
+      "Inception (2010)",
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Lord of the Rings: The Return of the King, The (2003)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Godfather, The (1972)",
+      "Lord of the Rings: The Fellowship of the Ring, The (2001)"
+    ],
+    "similarity_scores": [
+      0.1865,
+      0.182,
+      0.1816,
+      0.1816,
+      0.1814,
+      0.1813,
+      0.1806,
+      0.1802,
+      0.1799,
+      0.1798
+    ]
+  },
+  {
+    "userId": "100016",
+    "recommended_movie_ids": [
+      "318",
+      "527",
+      "2959",
+      "79132",
+      "260",
+      "858",
+      "296",
+      "7153",
+      "5952",
+      "4993"
+    ],
+    "recommended_titles": [
+      "Shawshank Redemption, The (1994)",
+      "Schindler's List (1993)",
+      "Fight Club (1999)",
+      "Inception (2010)",
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Godfather, The (1972)",
+      "Pulp Fiction (1994)",
+      "Lord of the Rings: The Return of the King, The (2003)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Lord of the Rings: The Fellowship of the Ring, The (2001)"
+    ],
+    "similarity_scores": [
+      0.1673,
+      0.1645,
+      0.1637,
+      0.1636,
+      0.1636,
+      0.1634,
+      0.1634,
+      0.1634,
+      0.163,
+      0.1626
+    ]
+  },
+  {
+    "userId": "100019",
+    "recommended_movie_ids": [
+      "32",
+      "923",
+      "539",
+      "778",
+      "111",
+      "69757",
+      "2000",
+      "1247",
+      "1968",
+      "122882"
+    ],
+    "recommended_titles": [
+      "Twelve Monkeys (a.k.a. 12 Monkeys) (1995)",
+      "Citizen Kane (1941)",
+      "Sleepless in Seattle (1993)",
+      "Trainspotting (1996)",
+      "Taxi Driver (1976)",
+      "(500) Days of Summer (2009)",
+      "Lethal Weapon (1987)",
+      "Graduate, The (1967)",
+      "Breakfast Club, The (1985)",
+      "Mad Max: Fury Road (2015)"
+    ],
+    "similarity_scores": [
+      0.1438,
+      0.1437,
+      0.1437,
+      0.1436,
+      0.1432,
+      0.143,
+      0.1427,
+      0.1427,
+      0.1426,
+      0.1425
+    ]
+  },
+  {
+    "userId": "100031",
+    "recommended_movie_ids": [
+      "260",
+      "32",
+      "5952",
+      "858",
+      "318",
+      "527",
+      "4993",
+      "110",
+      "2762",
+      "1270"
+    ],
+    "recommended_titles": [
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Twelve Monkeys (a.k.a. 12 Monkeys) (1995)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Godfather, The (1972)",
+      "Shawshank Redemption, The (1994)",
+      "Schindler's List (1993)",
+      "Lord of the Rings: The Fellowship of the Ring, The (2001)",
+      "Braveheart (1995)",
+      "Sixth Sense, The (1999)",
+      "Back to the Future (1985)"
+    ],
+    "similarity_scores": [
+      0.1449,
+      0.1447,
+      0.1446,
+      0.1441,
+      0.1439,
+      0.1437,
+      0.1434,
+      0.1434,
+      0.1433,
+      0.1432
+    ]
+  },
+  {
+    "userId": "100033",
+    "recommended_movie_ids": [
+      "270",
+      "104218",
+      "104245",
+      "122890",
+      "1004",
+      "3041",
+      "747",
+      "511",
+      "2536",
+      "2816"
+    ],
+    "recommended_titles": [
+      "Love Affair (1994)",
+      "Grown Ups 2 (2013)",
+      "Planes (2013)",
+      "Warcraft (2016)",
+      "Glimmer Man, The (1996)",
+      "Meatballs Part II (1984)",
+      "Stupids, The (1996)",
+      "Program, The (1993)",
+      "Concorde: Airport '79, The (1979)",
+      "Iron Eagle II (1988)"
+    ],
+    "similarity_scores": [
+      0.2333,
+      0.2175,
+      0.2174,
+      0.2165,
+      0.2164,
+      0.2115,
+      0.211,
+      0.2084,
+      0.2071,
+      0.2052
+    ]
+  },
+  {
+    "userId": "100034",
+    "recommended_movie_ids": [
+      "318",
+      "296",
+      "2959",
+      "527",
+      "79132",
+      "260",
+      "7153",
+      "5952",
+      "4993",
+      "593"
+    ],
+    "recommended_titles": [
+      "Shawshank Redemption, The (1994)",
+      "Pulp Fiction (1994)",
+      "Fight Club (1999)",
+      "Schindler's List (1993)",
+      "Inception (2010)",
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Lord of the Rings: The Return of the King, The (2003)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Lord of the Rings: The Fellowship of the Ring, The (2001)",
+      "Silence of the Lambs, The (1991)"
+    ],
+    "similarity_scores": [
+      0.2077,
+      0.2016,
+      0.2012,
+      0.2008,
+      0.2005,
+      0.2001,
+      0.1994,
+      0.1986,
+      0.1983,
+      0.1981
+    ]
+  },
+  {
+    "userId": "100035",
+    "recommended_movie_ids": [
+      "3811",
+      "162424",
+      "32584",
+      "46",
+      "203375",
+      "112334",
+      "759",
+      "2607",
+      "3077",
+      "117533"
+    ],
+    "recommended_titles": [
+      "Breaker Morant (1980)",
+      "Love Like Poison (2010)",
+      "Ballad of Jack and Rose, The (2005)",
+      "How to Make an American Quilt (1995)",
+      "Ford v. Ferrari (2019)",
+      "Internet's Own Boy: The Story of Aaron Swartz, The (2014)",
+      "Maya Lin: A Strong Clear Vision (1994)",
+      "Get Real (1998)",
+      "42 Up (1998)",
+      "Citizenfour (2014)"
+    ],
+    "similarity_scores": [
+      0.174,
+      0.171,
+      0.1588,
+      0.1583,
+      0.1532,
+      0.1514,
+      0.1503,
+      0.1501,
+      0.1455,
+      0.1445
+    ]
+  },
+  {
+    "userId": "100037",
+    "recommended_movie_ids": [
+      "260",
+      "5952",
+      "32",
+      "1270",
+      "318",
+      "589",
+      "1",
+      "2762",
+      "2571",
+      "1198"
+    ],
+    "recommended_titles": [
+      "Star Wars: Episode IV - A New Hope (1977)",
+      "Lord of the Rings: The Two Towers, The (2002)",
+      "Twelve Monkeys (a.k.a. 12 Monkeys) (1995)",
+      "Back to the Future (1985)",
+      "Shawshank Redemption, The (1994)",
+      "Terminator 2: Judgment Day (1991)",
+      "Toy Story (1995)",
+      "Sixth Sense, The (1999)",
+      "Matrix, The (1999)",
+      "Raiders of the Lost Ark (Indiana Jones and the Raiders of the Lost Ark) (1981)"
+    ],
+    "similarity_scores": [
+      0.1551,
+      0.1549,
+      0.1542,
+      0.1537,
+      0.1536,
+      0.1534,
+      0.1534,
+      0.1532,
+      0.153,
+      0.1529
+    ]
+  }
+]

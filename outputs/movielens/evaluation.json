@@ -1,0 +1,11 @@
+{
+  "recall@10": 0.0064,
+  "recall@50": 0.0323,
+  "ndcg@10": 0.0029,
+  "mrr@10": 0.0019,
+  "num_total_test_users": 55404,
+  "num_evaluated_users": 55404,
+  "num_cold_start_users": 0,
+  "num_test_interactions": 61547,
+  "checkpoint": "checkpoints\\movielens\\baseline_two_tower_epoch_5.pt"
+}

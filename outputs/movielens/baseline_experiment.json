@@ -1,0 +1,83 @@
+{
+  "experiment": "movielens_two_tower_baseline",
+  "dataset": {
+    "train_interactions": 250230,
+    "valid_interactions": 61547,
+    "test_interactions": 61547,
+    "users": 55404,
+    "movies": 20822
+  },
+  "training": {
+    "epochs": 5,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "temperature": 0.07,
+    "device": "cpu",
+    "total_elapsed_seconds": 1664.743,
+    "loss_history": [
+      {
+        "epoch": 1,
+        "train_loss": 5.5056,
+        "valid_loss": 5.4789,
+        "elapsed_seconds": 335.531
+      },
+      {
+        "epoch": 2,
+        "train_loss": 5.4820,
+        "valid_loss": 5.4758,
+        "elapsed_seconds": 330.985
+      },
+      {
+        "epoch": 3,
+        "train_loss": 5.4569,
+        "valid_loss": 5.4815,
+        "elapsed_seconds": 333.37
+      },
+      {
+        "epoch": 4,
+        "train_loss": 5.4269,
+        "valid_loss": 5.4941,
+        "elapsed_seconds": 323.443
+      },
+      {
+        "epoch": 5,
+        "train_loss": 5.3940,
+        "valid_loss": 5.5031,
+        "elapsed_seconds": 337.943
+      }
+    ]
+  },
+  "metrics": {
+    "recall@10": 0.0064,
+    "recall@50": 0.0323,
+    "ndcg@10": 0.0029,
+    "mrr@10": 0.0019,
+    "num_total_test_users": 55404,
+    "num_evaluated_users": 55404,
+    "num_cold_start_users": 0,
+    "num_test_interactions": 61547
+  },
+  "checkpoint": "checkpoints/movielens/baseline_two_tower_epoch_5.pt",
+  "comparison_against_smoke_test": {
+    "smoke_test": {
+      "train_samples": 5000,
+      "epochs": 2,
+      "evaluated_users": 1960,
+      "cold_start_users": 12948,
+      "recall@10": 0.0,
+      "recall@50": 0.0,
+      "ndcg@10": 0.0,
+      "mrr@10": 0.0
+    },
+    "serious_baseline": {
+      "train_samples": 250230,
+      "epochs": 5,
+      "evaluated_users": 55404,
+      "cold_start_users": 0,
+      "recall@10": 0.0064,
+      "recall@50": 0.0323,
+      "ndcg@10": 0.0029,
+      "mrr@10": 0.0019
+    }
+  }
+}
