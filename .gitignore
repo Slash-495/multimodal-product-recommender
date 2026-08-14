@@ -6,3 +6,15 @@ __pycache__/
 .vscode/
 .env
 *.log
+# Local datasets
+data/
+
+# Local model checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Generated Python/build artifacts
+*.egg-info/
+dist/
+build/
