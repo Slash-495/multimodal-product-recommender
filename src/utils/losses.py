@@ -112,4 +112,40 @@ class HardNegativeInfoNCELoss(nn.Module):
         log_denominator = torch.logsumexp(all_candidate_scores, dim=1)  # [B]
         loss_u2i = -pos_scores + log_denominator
 
-        return loss_u2i.mean() 
+        return loss_u2i.mean()
+
+
+class BPRRankingLoss(nn.Module):
+    """
+    Bayesian Personalized Ranking (BPR) Pairwise Loss for Stage-2 Reranking.
+
+    Mathematical Formulation:
+    -------------------------
+    Given reranker score R(u, i^+) for positive item i^+ and reranker score R(u, j^-) for negative candidate j^-:
+
+        L_BPR = -log sigmoid( R(u, i^+) - R(u, j^-) ) = softplus( -(R(u, i^+) - R(u, j^-)) )
+
+    This encourages the reranker to output higher scalar scores for positive candidates relative to negative candidates.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, pos_scores: torch.Tensor, neg_scores: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            pos_scores: Tensor of shape [batch_size] or [batch_size, 1]
+            neg_scores: Tensor of shape [batch_size] or [batch_size, num_negatives]
+
+        Returns:
+            Scalar loss tensor
+        """
+        if pos_scores.dim() == 1:
+            pos_scores = pos_scores.unsqueeze(1)  # [batch_size, 1]
+        if neg_scores.dim() == 1:
+            neg_scores = neg_scores.unsqueeze(1)  # [batch_size, 1]
+
+        # Difference: [batch_size, num_negatives]
+        score_diff = pos_scores - neg_scores
+        loss = F.softplus(-score_diff)
+        return loss.mean() 

@@ -1,0 +1,66 @@
+{
+  "experiment": "stage2_reranker_comparison",
+  "candidate_k": 50,
+  "final_k": 10,
+  "models": {
+    "baseline_epoch_1": {
+      "model": "Original Baseline",
+      "epoch": 1,
+      "recall@10": 0.0115,
+      "recall@50": 0.0515,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0031
+    },
+    "hard_negative_epoch_1": {
+      "model": "Hard-Negative Content-Concat",
+      "epoch": 1,
+      "recall@10": 0.0119,
+      "recall@50": 0.0533,
+      "ndcg@10": 0.0052,
+      "mrr@10": 0.0033
+    },
+    "reranked_epoch_1": {
+      "model": "Hard-Negative Concat + Stage-2 Reranker",
+      "epoch": 1,
+      "recall@10": 0.010333,
+      "recall@50": 0.053252,
+      "ndcg@10": 0.00476,
+      "mrr@10": 0.003114
+    }
+  },
+  "improvements_vs_hard_negative": {
+    "recall@10": {
+      "hard_negative": 0.0119,
+      "reranked": 0.010333,
+      "abs_improvement": -0.001567,
+      "rel_improvement_pct": -13.17
+    },
+    "recall@50": {
+      "hard_negative": 0.0533,
+      "reranked": 0.053252,
+      "abs_improvement": -4.8e-05,
+      "rel_improvement_pct": -0.09
+    },
+    "ndcg@10": {
+      "hard_negative": 0.0052,
+      "reranked": 0.00476,
+      "abs_improvement": -0.00044,
+      "rel_improvement_pct": -8.46
+    },
+    "mrr@10": {
+      "hard_negative": 0.0033,
+      "reranked": 0.003114,
+      "abs_improvement": -0.000186,
+      "rel_improvement_pct": -5.64
+    }
+  },
+  "evaluation_metadata": {
+    "recall@10": 0.010333,
+    "recall@50": 0.053252,
+    "ndcg@10": 0.00476,
+    "mrr@10": 0.003114,
+    "num_evaluated_users": 55404,
+    "evaluation_time_seconds": 112.96,
+    "ms_per_user": 2.039
+  }
+}

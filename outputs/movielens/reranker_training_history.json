@@ -1,0 +1,38 @@
+{
+  "total_elapsed_seconds": 11.275,
+  "config": {
+    "candidate_k": 50,
+    "final_k": 10,
+    "reranker_hidden_dim": 64,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "epochs": 5
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.397953,
+      "elapsed_seconds": 2.219
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.147126,
+      "elapsed_seconds": 2.262
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.114597,
+      "elapsed_seconds": 2.25
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.102958,
+      "elapsed_seconds": 2.328
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.09896,
+      "elapsed_seconds": 2.186
+    }
+  ]
+}
