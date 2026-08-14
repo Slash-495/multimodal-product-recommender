@@ -1,0 +1,55 @@
+{
+  "experiment": "movielens_two_tower_content_enhanced",
+  "checkpoints": [
+    {
+      "epoch": 1,
+      "train_loss": 5.504989,
+      "valid_loss": 5.482726,
+      "recall@10": 0.011,
+      "recall@50": 0.0527,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0033,
+      "checkpoint_path": "checkpoints\\movielens\\content_two_tower_epoch_1.pt"
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.479448,
+      "valid_loss": 5.483544,
+      "recall@10": 0.0112,
+      "recall@50": 0.0471,
+      "ndcg@10": 0.005,
+      "mrr@10": 0.0031,
+      "checkpoint_path": "checkpoints\\movielens\\content_two_tower_epoch_2.pt"
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.454045,
+      "valid_loss": 5.472296,
+      "recall@10": 0.0101,
+      "recall@50": 0.0448,
+      "ndcg@10": 0.0044,
+      "mrr@10": 0.0028,
+      "checkpoint_path": "checkpoints\\movielens\\content_two_tower_epoch_3.pt"
+    },
+    {
+      "epoch": 4,
+      "train_loss": 5.423949,
+      "valid_loss": 5.497655,
+      "recall@10": 0.0087,
+      "recall@50": 0.0392,
+      "ndcg@10": 0.0039,
+      "mrr@10": 0.0025,
+      "checkpoint_path": "checkpoints\\movielens\\content_two_tower_epoch_4.pt"
+    },
+    {
+      "epoch": 5,
+      "train_loss": 5.389372,
+      "valid_loss": 5.511808,
+      "recall@10": 0.0061,
+      "recall@50": 0.0294,
+      "ndcg@10": 0.0027,
+      "mrr@10": 0.0017,
+      "checkpoint_path": "checkpoints\\movielens\\content_two_tower_epoch_5.pt"
+    }
+  ]
+}

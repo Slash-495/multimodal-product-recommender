@@ -10,6 +10,7 @@ project_root = Path(__file__).resolve().parents[1]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
+import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Subset
 
@@ -17,6 +18,7 @@ from src.data.movielens_dataset import MovieLensDataset
 from src.models.two_tower import TwoTowerModel
 from src.trainers.two_tower_trainer import TwoTowerTrainer
 from src.utils.config import DEFAULT_CONFIG
+from src.features.text_features import MovieTitleTextEmbedder
 from src.utils.model_utils import save_model
 
 
@@ -32,6 +34,11 @@ def parse_args():
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="Device (cpu or cuda)")
     parser.add_argument("--max-samples", type=int, default=None, help="Small-scale smoke training max samples limit")
     parser.add_argument("--num-workers", type=int, default=0, help="Number of data loader worker threads")
+    parser.add_argument("--model-name", type=str, default="two_tower_movielens", help="Name prefix for saved checkpoints")
+    parser.add_argument("--use-text-features", action="store_true", help="Enable TF-IDF + TruncatedSVD movie title content features")
+    parser.add_argument("--text-embedding-dim", type=int, default=64, help="Dimension of SVD text embedding")
+    parser.add_argument("--tfidf-max-features", type=int, default=5000, help="Max vocabulary features for TF-IDF vectorizer")
+    parser.add_argument("--svd-components", type=int, default=64, help="Number of components for TruncatedSVD")
     return parser.parse_args()
 
 
@@ -43,13 +50,40 @@ def main():
         print(f"Error: MovieLens data directory '{data_path}' does not exist. Run preprocessing first.")
         sys.exit(1)
 
-    print(f"Initializing MovieLens dataset from '{data_path}'...")
-    train_dataset = MovieLensDataset(data_path=data_path, mode="train")
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    text_map = None
+    if args.use_text_features:
+        meta_file = data_path / "movie_metadata.csv"
+        if not meta_file.exists():
+            print(f"Error: Movie metadata file '{meta_file}' required for text features does not exist.")
+            sys.exit(1)
+        
+        print("Fitting TF-IDF + TruncatedSVD text embedder on movie catalog titles...")
+        meta_df = pd.read_csv(meta_file)
+        meta_df["movieId"] = meta_df["movieId"].astype(str)
+
+        embedder = MovieTitleTextEmbedder(
+            tfidf_max_features=args.tfidf_max_features,
+            svd_components=args.svd_components,
+            random_state=42,
+        )
+        text_embs = embedder.fit_transform(meta_df["title"].tolist())
+        text_map = {mid: emb for mid, emb in zip(meta_df["movieId"], text_embs)}
+
+        embedder_save_path = output_dir / "title_text_embedder.joblib"
+        embedder.save(embedder_save_path)
+        print(f"Saved fitted text embedder artifact to '{embedder_save_path}'.")
+
+    print(f"Initializing MovieLens dataset from '{data_path}' (text_features={args.use_text_features})...")
+    train_dataset = MovieLensDataset(data_path=data_path, mode="train", text_embeddings_map=text_map)
     valid_dataset = MovieLensDataset(
         data_path=data_path,
         mode="valid",
         user2idx=train_dataset.user2idx,
         business2idx=train_dataset.business2idx,
+        text_embeddings_map=text_map,
     )
 
     if args.max_samples is not None and args.max_samples > 0:
@@ -82,6 +116,10 @@ def main():
     config["training"]["learning_rate"] = args.learning_rate
     config["training"]["temperature"] = args.temperature
     config["training"]["num_epochs"] = args.epochs
+    
+    if args.use_text_features:
+        config["model"]["item_tower"]["use_text_features"] = True
+        config["model"]["item_tower"]["text_embedding_dim"] = args.text_embedding_dim
 
     device = torch.device(args.device)
     print(f"Using device: {device}")
@@ -127,7 +165,7 @@ def main():
             epoch=epoch,
             metrics=metrics,
             save_dir=str(checkpoint_dir),
-            model_name="two_tower_movielens",
+            model_name=args.model_name,
         )
 
         history.append(

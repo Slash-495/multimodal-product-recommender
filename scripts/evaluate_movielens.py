@@ -86,6 +86,22 @@ def evaluate_retrieval(
     test_inter["user_id"] = test_inter["user_id"].astype(str)
     test_inter["business_id"] = test_inter["business_id"].astype(str)
 
+    from src.features.text_features import MovieTitleTextEmbedder
+
+    use_text = getattr(model.item_tower, "use_text_features", False)
+    text_map = {}
+    if use_text:
+        meta_file = data_path / "movie_metadata.csv"
+        if not meta_file.exists():
+            raise FileNotFoundError(f"Movie metadata file required for text features not found at '{meta_file}'")
+        meta_df = pd.read_csv(meta_file)
+        meta_df["movieId"] = meta_df["movieId"].astype(str)
+
+        text_dim = getattr(model.item_tower, "text_embedding_dim", 64)
+        embedder = MovieTitleTextEmbedder(tfidf_max_features=5000, svd_components=text_dim, random_state=42)
+        text_embs = embedder.fit_transform(meta_df["title"].tolist())
+        text_map = {mid: emb for mid, emb in zip(meta_df["movieId"], text_embs)}
+
     # 1. Encode all eligible movies once
     cat_cols = sorted([col for col in biz_df.columns if col.startswith("cat_")])
     cat_cols = cat_cols[:10]
@@ -104,7 +120,14 @@ def evaluate_retrieval(
         while len(cf_vec) < 10:
             cf_vec.append(0.0)
 
-        movie_tensor_list.append((bf_vec, cf_vec))
+        tf_vec = None
+        if use_text:
+            if mid_str in text_map:
+                tf_vec = text_map[mid_str]
+            else:
+                tf_vec = np.zeros(text_dim, dtype=np.float32)
+
+        movie_tensor_list.append((bf_vec, cf_vec, tf_vec))
 
     # Batch encode movies
     batch_size = 512
@@ -118,7 +141,11 @@ def evaluate_retrieval(
             m_ids = bf_batch[:, 0].long()
             b_stats = bf_batch[:, 1:]
 
-            embs = model.encode_item(m_ids, b_stats, cf_batch)
+            tf_batch = None
+            if use_text:
+                tf_batch = torch.tensor([b[2] for b in batch_slice], dtype=torch.float32, device=device)
+
+            embs = model.encode_item(m_ids, b_stats, cf_batch, text_features=tf_batch)
             all_movie_embeddings.append(embs.cpu().numpy().astype(np.float32))
 
     concat_movie_embeddings = np.vstack(all_movie_embeddings)
